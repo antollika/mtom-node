@@ -9,6 +9,9 @@ const app = express();
 const HOST = 5000;
 
 app.use('/api/track-convert', trackConvertRoutes);
+app.use('/test', (req, res) => {
+  res.status(200).json({ message: 'Good' });
+});
 
 const startApplication = async () => {
   await getSpotifyToken();
