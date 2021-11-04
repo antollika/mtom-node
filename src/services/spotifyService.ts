@@ -27,7 +27,6 @@ export const getSpotifyToken = async () => {
 };
 
 export const getSpotifyTrackData = async (link: string) => {
-  // eslint-disable-next-line
   const matchedTrackId = decodeURIComponent(link).match(/track\/(.+)[\s|\?]/);
   if (matchedTrackId) {
     const trackId = matchedTrackId[1];
