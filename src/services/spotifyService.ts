@@ -27,7 +27,7 @@ export const getSpotifyToken = async () => {
 };
 
 export const getSpotifyTrackData = async (link: string) => {
-  const matchedTrackId = decodeURIComponent(link).match(/track\/(.+)[\s|\?]/);
+  const matchedTrackId = decodeURIComponent(link).match(/track\/(\w+)/);
   if (matchedTrackId) {
     const trackId = matchedTrackId[1];
     const result = await axios.get(
