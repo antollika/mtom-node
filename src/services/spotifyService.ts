@@ -26,10 +26,7 @@ export const getSpotifyToken = async () => {
   }
 };
 
-export const getSpotifyTrackData = async (
-  link: string,
-  callback: (res: AxiosResponse['data']) => void
-) => {
+export const getSpotifyTrackData = async (link: string) => {
   // eslint-disable-next-line
   const matchedTrackId = decodeURIComponent(link).match(/track\/(.+)[\s|\?]/);
   if (matchedTrackId) {
@@ -42,6 +39,8 @@ export const getSpotifyTrackData = async (
         },
       }
     );
-    callback(result.data);
+    return result.data;
   }
+
+  return void 0;
 };

@@ -13,7 +13,6 @@ export type DeezerData = {
 
 export const findDeezerTrack = async (
   trackName: string | number,
-  callback: (data: DeezerData) => void,
   artistName?: string
 ) => {
   const result = await axios.get(
@@ -28,6 +27,7 @@ export const findDeezerTrack = async (
   );
 
   if (returnValue) {
-    return callback(returnValue);
+    return returnValue;
   }
+  return void 0;
 };
