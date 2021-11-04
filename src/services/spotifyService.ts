@@ -44,3 +44,33 @@ export const getSpotifyTrackData = async (link: string) => {
 
   return void 0;
 };
+
+export const findSpotifyTrack = async (
+  trackName: string | number,
+  artistName?: string
+) => {
+  const query = new URLSearchParams({
+    q: `${artistName} ${trackName}`,
+    type: 'track',
+  });
+  try {
+    const result = await axios.get(`https://api.spotify.com/v1/search`, {
+      headers: {
+        Authorization: 'Bearer ' + spotifyToken,
+      },
+      params: query,
+    });
+
+    const {
+      tracks: { items },
+    } = result.data;
+
+    if (items && items.length) {
+      return items[0].external_urls.spotify;
+    }
+
+    return void 0;
+  } catch (error) {
+    console.log(error);
+  }
+};
