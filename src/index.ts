@@ -1,26 +1,18 @@
-import {
-  getSpotifyToken,
-  getSpotifyTrackData,
-} from './services/spotifyService';
-import { findDeezerTrack } from './services/deezerService';
+import express from 'express';
+import { getSpotifyToken } from './services/spotifyService';
+import trackConvertRoutes from './routes/track.convert.routes';
 
 const spotifyTestLink =
   'https://open.spotify.com/track/698ItKASDavgwZ3WjaWjtz?si=f4ba599a7a0b476e';
 
-const testMethod = async () => {
-  await getSpotifyToken();
-  getSpotifyTrackData(spotifyTestLink, (trackData) => {
-    const { name } = trackData;
-    const artistName = trackData.album?.artists[0].name;
+const app = express();
+const HOST = 5000;
 
-    findDeezerTrack(
-      name,
-      (result) => {
-        console.log(result.link);
-      },
-      artistName
-    );
-  });
+app.use('/api/track-convert', trackConvertRoutes);
+
+const startApplication = async () => {
+  await getSpotifyToken();
+  app.listen(HOST, () => console.log(`App running on ${HOST}`));
 };
 
-testMethod();
+startApplication();
