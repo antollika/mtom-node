@@ -6,7 +6,6 @@ const spotifyTestLink =
   'https://open.spotify.com/track/698ItKASDavgwZ3WjaWjtz?si=f4ba599a7a0b476e';
 
 const app = express();
-const HOST = 5000;
 
 app.use('/api/track-convert', trackConvertRoutes);
 app.use('/test', (req, res) => {
@@ -15,7 +14,9 @@ app.use('/test', (req, res) => {
 
 const startApplication = async () => {
   await getSpotifyToken();
-  app.listen(HOST, () => console.log(`App running on ${HOST}`));
+  app.listen(process.env.PORT || 5000, () =>
+    console.log(`App running on ${process.env.PORT || 5000}`)
+  );
 };
 
 startApplication();
