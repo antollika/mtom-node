@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import {
-  findSpotifyTrack,
-  getSpotifyTrackData,
-} from '../services/spotifyService';
+  findSpotifyTrack, getSpotifyToken,
+  getSpotifyTrackData
+} from "../services/spotifyService";
 import { findDeezerTrack, getDeezerTrackData } from '../services/deezerService';
 
 const router = Router();
@@ -19,6 +19,7 @@ router.get('/get', async (req, res) => {
 
   if (isSpotifyTrack) {
     try {
+      await getSpotifyToken();
       const spotifyLinkData = await getSpotifyTrackData(trackLink);
 
       if (!spotifyLinkData) {
@@ -62,6 +63,7 @@ router.get('/get', async (req, res) => {
         return;
       }
 
+      await getSpotifyToken();
       const spotifyLink = await findSpotifyTrack(
         deezerTrackData.title,
         deezerTrackData.artist.name
