@@ -32,9 +32,10 @@ export const findDeezerTrack = async (
   trackName: string | number,
   artistName?: string
 ) => {
-  const result = await axios.get(
-    URL + `search?q=${trackName + ' ' + artistName}`
-  );
+  const query = new URLSearchParams({
+    q: trackName + ' ' + artistName,
+  });
+  const result = await axios.get(URL + `search`, { params: query });
 
   const returnValue = result.data.data.find(
     (item) =>
