@@ -9,7 +9,7 @@ const router = Router();
 
 router.get('/get', async (req, res) => {
   const {
-    query: { link },
+    query: { link = '' },
   } = req;
 
   const trackLink = link.toString();
@@ -18,30 +18,70 @@ router.get('/get', async (req, res) => {
   const isDeezerTrack = Boolean(trackLink.match(/deezer/g));
 
   if (isSpotifyTrack) {
-    const spotifyLinkData = await getSpotifyTrackData(trackLink);
+    try {
+      const spotifyLinkData = await getSpotifyTrackData(trackLink);
 
-    const { name } = spotifyLinkData;
-    const artistName = spotifyLinkData.album?.artists[0].name;
+      if (!spotifyLinkData) {
+        res.status(400).json({
+          message: 'Track is not found',
+        });
+        return;
+      }
 
-    const deezerData = await findDeezerTrack(name, artistName);
+      const { name } = spotifyLinkData;
+      const artistName = spotifyLinkData.album?.artists[0].name;
 
-    res.status(200).json({
-      deezerLink: deezerData.link,
-    });
+      const deezerData = await findDeezerTrack(name, artistName);
+
+      if (!deezerData) {
+        res.status(400).json({
+          message: 'Track is not found',
+        });
+        return;
+      }
+
+      res.status(200).json({
+        deezerLink: deezerData.link,
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: 'Track is not found',
+      });
+    }
     return;
   }
 
   if (isDeezerTrack) {
-    const deezerTrackData = await getDeezerTrackData(trackLink);
+    try {
+      const deezerTrackData = await getDeezerTrackData(trackLink);
 
-    const spotifyTrack = await findSpotifyTrack(
-      deezerTrackData.title,
-      deezerTrackData.artist.name
-    );
+      if (!deezerTrackData) {
+        res.status(400).json({
+          message: 'Track is not found',
+        });
+        return;
+      }
 
-    res.status(200).json({
-      spotifyTrack,
-    });
+      const spotifyLink = await findSpotifyTrack(
+        deezerTrackData.title,
+        deezerTrackData.artist.name
+      );
+
+      if (!spotifyLink) {
+        res.status(400).json({
+          message: 'Track is not found',
+        });
+        return;
+      }
+
+      res.status(200).json({
+        spotifyLink,
+      });
+    } catch (e) {
+      res.status(400).json({
+        message: 'Track is not found',
+      });
+    }
     return;
   }
 
