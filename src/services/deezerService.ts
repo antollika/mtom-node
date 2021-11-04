@@ -1,4 +1,5 @@
 import axios from 'axios';
+import xml2js from 'xml2js';
 
 const URL = 'https://api.deezer.com/';
 
@@ -9,6 +10,22 @@ export type DeezerData = {
   title: string;
   type: 'track';
   link: string;
+};
+
+export const getDeezerTrackData = async (link: string) => {
+  const result = await axios.get(link);
+  const trackIdMatch = result.data.match(/track\/(\d+)/);
+  const trackId = trackIdMatch ? trackIdMatch[1] : 0;
+
+  if (trackId) {
+    const trackData = await axios.get(
+      `https://api.deezer.com/track/${trackId}`
+    );
+
+    return trackData.data;
+  }
+
+  return void 0;
 };
 
 export const findDeezerTrack = async (

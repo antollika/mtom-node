@@ -1,6 +1,9 @@
 import { Router } from 'express';
-import { getSpotifyTrackData } from '../services/spotifyService';
-import { findDeezerTrack } from '../services/deezerService';
+import {
+  findSpotifyTrack,
+  getSpotifyTrackData,
+} from '../services/spotifyService';
+import { findDeezerTrack, getDeezerTrackData } from '../services/deezerService';
 
 const router = Router();
 
@@ -9,15 +12,41 @@ router.get('/get', async (req, res) => {
     query: { link },
   } = req;
 
-  const spotifyLinkData = await getSpotifyTrackData(link as string);
+  const trackLink = link.toString();
 
-  const { name } = spotifyLinkData;
-  const artistName = spotifyLinkData.album?.artists[0].name;
+  const isSpotifyTrack = Boolean(trackLink.match(/spotify/g));
+  const isDeezerTrack = Boolean(trackLink.match(/deezer/g));
 
-  const deezerData = await findDeezerTrack(name, artistName);
+  if (isSpotifyTrack) {
+    const spotifyLinkData = await getSpotifyTrackData(trackLink);
 
-  res.status(200).json({
-    deezerLink: deezerData.link,
+    const { name } = spotifyLinkData;
+    const artistName = spotifyLinkData.album?.artists[0].name;
+
+    const deezerData = await findDeezerTrack(name, artistName);
+
+    res.status(200).json({
+      deezerLink: deezerData.link,
+    });
+    return;
+  }
+
+  if (isDeezerTrack) {
+    const deezerTrackData = await getDeezerTrackData(trackLink);
+
+    const spotifyTrack = await findSpotifyTrack(
+      deezerTrackData.title,
+      deezerTrackData.artist.name
+    );
+
+    res.status(200).json({
+      spotifyTrack,
+    });
+    return;
+  }
+
+  res.status(404).json({
+    message: 'Track is not found',
   });
 });
 
