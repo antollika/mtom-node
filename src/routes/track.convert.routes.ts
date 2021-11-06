@@ -46,6 +46,7 @@ router.get('/get', async (req, res) => {
     } catch (error) {
       res.status(400).json({
         message: 'Track is not found',
+        error,
       });
     }
     return;
@@ -76,9 +77,10 @@ router.get('/get', async (req, res) => {
       }
 
       res.status(200).json(spotifyData);
-    } catch (e) {
+    } catch (error) {
       res.status(400).json({
         message: 'Track is not found',
+        error,
       });
     }
     return;
