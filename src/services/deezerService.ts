@@ -1,7 +1,11 @@
 import axios from 'axios';
-import xml2js from 'xml2js';
 import fs from 'fs';
 import path from 'path';
+
+const pathToLogo = path.join(
+  __dirname,
+  '../public/service_images/deezer_image.png'
+);
 
 const URL = 'https://api.deezer.com/';
 
@@ -54,12 +58,9 @@ export const findDeezerTrack = async (
       album: { cover_medium },
     } = returnValue;
 
-    const base64 = fs.readFileSync(
-      path.join(__dirname, '../public/service_images/deezer_image.png'),
-      {
-        encoding: 'base64',
-      }
-    );
+    const base64 = fs.readFileSync(pathToLogo, {
+      encoding: 'base64',
+    });
 
     return {
       trackLink,

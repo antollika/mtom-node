@@ -2,6 +2,11 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 
+const pathLoLogo = path.join(
+  __dirname,
+  '../public/service_images/spotify_image.png'
+);
+
 let spotifyToken = '';
 
 const CLIENT_ID = '96b736597455448c8fdcc93e3e68516c';
@@ -72,12 +77,9 @@ export const findSpotifyTrack = async (
     const { name } = artists[0];
     const { url: imageUrl } = images[0];
 
-    const base64 = fs.readFileSync(
-      path.join(__dirname, '../public/service_images/spotify_image.png'),
-      {
-        encoding: 'base64',
-      }
-    );
+    const base64 = fs.readFileSync(pathLoLogo, {
+      encoding: 'base64',
+    });
 
     const songData = {
       trackLink: spotify,
