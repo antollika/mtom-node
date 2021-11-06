@@ -1,4 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
 
 let spotifyToken = '';
 
@@ -65,7 +67,33 @@ export const findSpotifyTrack = async (
     } = result.data;
 
     if (items && items.length) {
-      return items[0].external_urls.spotify;
+      const {
+        external_urls: { spotify },
+        artists,
+        name: trackName,
+        external_ids: { isrc },
+        album: { images },
+      } = items[0];
+      const { name } = artists[0];
+      const { url: imageUrl } = images[0];
+
+      const base64 = fs.readFileSync(
+        path.join(__dirname, '../public/service_images/spotify_image.png'),
+        {
+          encoding: 'base64',
+        }
+      );
+
+      const songData = {
+        trackLink: spotify,
+        artist: name,
+        trackName,
+        imageUrl,
+        serviceName: 'Spotify',
+        serviceLogo: base64,
+      };
+
+      return songData;
     }
 
     return void 0;

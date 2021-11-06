@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import {
-  findSpotifyTrack, getSpotifyToken,
-  getSpotifyTrackData
-} from "../services/spotifyService";
+  findSpotifyTrack,
+  getSpotifyToken,
+  getSpotifyTrackData,
+} from '../services/spotifyService';
 import { findDeezerTrack, getDeezerTrackData } from '../services/deezerService';
 
 const router = Router();
@@ -41,9 +42,7 @@ router.get('/get', async (req, res) => {
         return;
       }
 
-      res.status(200).json({
-        deezerLink: deezerData.link,
-      });
+      res.status(200).json(deezerData);
     } catch (error) {
       res.status(400).json({
         message: 'Track is not found',
@@ -64,21 +63,19 @@ router.get('/get', async (req, res) => {
       }
 
       await getSpotifyToken();
-      const spotifyLink = await findSpotifyTrack(
+      const spotifyData = await findSpotifyTrack(
         deezerTrackData.title,
         deezerTrackData.artist.name
       );
 
-      if (!spotifyLink) {
+      if (!spotifyData) {
         res.status(400).json({
           message: 'Track is not found',
         });
         return;
       }
 
-      res.status(200).json({
-        spotifyLink,
-      });
+      res.status(200).json(spotifyData);
     } catch (e) {
       res.status(400).json({
         message: 'Track is not found',

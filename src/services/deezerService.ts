@@ -1,5 +1,7 @@
 import axios from 'axios';
 import xml2js from 'xml2js';
+import fs from 'fs';
+import path from 'path';
 
 const URL = 'https://api.deezer.com/';
 
@@ -45,7 +47,28 @@ export const findDeezerTrack = async (
   );
 
   if (returnValue) {
-    return returnValue;
+    const {
+      title,
+      link: trackLink,
+      artist: { name: artistName },
+      album: { cover_medium },
+    } = returnValue;
+
+    const base64 = fs.readFileSync(
+      path.join(__dirname, '../public/service_images/deezer_image.png'),
+      {
+        encoding: 'base64',
+      }
+    );
+
+    return {
+      trackLink,
+      artist: artistName,
+      trackName: title,
+      imageUrl: cover_medium,
+      serviceName: 'Deezer',
+      serviceLogo: base64,
+    };
   }
   return void 0;
 };
