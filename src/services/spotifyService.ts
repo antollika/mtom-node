@@ -1,11 +1,11 @@
 import axios from 'axios';
-// import fs from 'fs';
-// import path from 'path';
-//
-// const pathLoLogo = path.join(
-//   __dirname,
-//   '../public/service_images/spotify_image.png'
-// );
+import fs from 'fs';
+import path from 'path';
+
+const pathLoLogo = path.join(
+  process.cwd(),
+  '/src/public/service_images/spotify_image.png'
+);
 
 let spotifyToken = '';
 
@@ -77,9 +77,9 @@ export const findSpotifyTrack = async (
     const { name } = artists[0];
     const { url: imageUrl } = images[0];
 
-    // const base64 = fs.readFileSync(pathLoLogo, {
-    //   encoding: 'base64',
-    // });
+    const base64 = fs.readFileSync(pathLoLogo, {
+      encoding: 'base64',
+    });
 
     const songData = {
       trackLink: spotify,
@@ -87,7 +87,7 @@ export const findSpotifyTrack = async (
       trackName,
       imageUrl,
       serviceName: 'Spotify',
-      // serviceLogo: base64,
+      serviceLogo: base64,
     };
 
     return songData;
