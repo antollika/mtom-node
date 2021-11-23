@@ -8,7 +8,7 @@ import { findDeezerTrack, getDeezerTrackData } from '../services/deezerService';
 
 const router = Router();
 
-router.get('/get', async (req, res) => {
+router.get('/get', async (req, res, next) => {
   const {
     query: { link = '' },
   } = req;
@@ -27,6 +27,7 @@ router.get('/get', async (req, res) => {
         res.status(400).json({
           message: 'Track is not found',
         });
+        next();
         return;
       }
 
@@ -39,15 +40,18 @@ router.get('/get', async (req, res) => {
         res.status(400).json({
           message: 'Track is not found',
         });
+        next();
         return;
       }
 
       res.status(200).json(deezerData);
+      next();
     } catch (error) {
       res.status(400).json({
         message: 'Track is not found',
         error,
       });
+      next();
     }
     return;
   }
@@ -60,6 +64,7 @@ router.get('/get', async (req, res) => {
         res.status(400).json({
           message: 'Track is not found',
         });
+        next();
         return;
       }
 
@@ -73,15 +78,18 @@ router.get('/get', async (req, res) => {
         res.status(400).json({
           message: 'Track is not found',
         });
+        next();
         return;
       }
 
       res.status(200).json(spotifyData);
+      next();
     } catch (error) {
       res.status(400).json({
         message: 'Track is not found',
         error,
       });
+      next();
     }
     return;
   }
@@ -89,6 +97,7 @@ router.get('/get', async (req, res) => {
   res.status(404).json({
     message: 'Track is not found',
   });
+  next();
 });
 
 export default router;
